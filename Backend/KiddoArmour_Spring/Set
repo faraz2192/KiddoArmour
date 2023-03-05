@@ -1,0 +1,38 @@
+is it possible to store notification once using set but showing 
+the doctor whenever same notification arrives without storing it
+
+Yes, it is possible to store the notification only once in the database 
+while still being able to display it each time it arrives without storing it again. 
+One way to achieve this is by adding an extra flag to the Notification entity, 
+such as a isRead boolean field, that indicates whether the doctor has already 
+seen the notification or not. When a new notification arrives, the service can 
+check if there is already an unread notification with the same content for the same 
+doctor, and if there is, it can simply update the existing notification's timestamp 
+to indicate that it has been seen again, rather than creating a new notification. 
+This way, the notification will be displayed to the doctor each time it arrives, without 
+creating duplicate entries in the database.
+
+This Code can be written in the service class
+
+@Override
+public boolean equals(Object obj) {
+    if (obj == this) {
+        return true;
+    }
+    if (!(obj instanceof Notification)) {
+        return false;
+    }
+    Notification notification = (Notification) obj;
+    return Objects.equals(type, notification.type) &&
+           Objects.equals(message, notification.message);
+}
+
+@Override
+public int hashCode() {
+    return Objects.hash(type, message);
+}
+
+The code for showing the notification to the doctor each time it arrives without storing it can be 
+written in the service class. When a new notification arrives, the service class can retrieve the list 
+of doctors associated with the notification and check if they have already been notified for that notification. 
+If they haven't, the service can send them the notification and mark them as notified for that notification.
